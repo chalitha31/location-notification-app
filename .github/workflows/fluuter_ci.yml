@@ -2,9 +2,9 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ '**' ]     # All branches
+    branches: [ '**' ]
   pull_request:
-    branches: [ '**' ]     # All branches
+    branches: [ '**' ]
 
 jobs:
   build:
@@ -17,7 +17,16 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'  # ඔබගේ Flutter version එක මෙහි යොදන්න
+          flutter-version: '3.22.0'
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
 
       - name: Install dependencies
         run: flutter pub get
