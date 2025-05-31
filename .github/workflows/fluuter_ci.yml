@@ -20,7 +20,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.32.1'
+
           cache: true
 
       - name: Install dependencies
@@ -54,3 +55,4 @@ jobs:
           echo "✅ Simple CI check for event: ${{ github.event_name }}"
           echo "🔀 Branch ref: ${{ github.ref }}"
           echo "📌 PR Base ref (if any): ${{ github.base_ref }}"
+
