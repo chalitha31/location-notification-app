@@ -3,14 +3,14 @@ name: Flutter CI
 on:
   push:
     branches:
-      - '**'  # All branches - We'll filter inside jobs
+      - '**'
   pull_request:
     branches:
-      - '**'  # All PRs
+      - '**'
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'  # Only PRs to main
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -48,6 +48,9 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-      
-      - name: Simple status step
-        run: echo "✅ Simple CI check for branch: ${{ github.ref || github.base_ref }}"
+
+      - name: Simple CI check
+        run: |
+          echo "✅ Simple CI check for event: ${{ github.event_name }}"
+          echo "🔀 Branch ref: ${{ github.ref }}"
+          echo "📌 PR Base ref (if any): ${{ github.base_ref }}"
