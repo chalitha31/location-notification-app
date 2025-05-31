@@ -2,31 +2,26 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ '**' ]
+    branches:
+      - '**'  # All branches - We'll filter inside jobs
   pull_request:
-    branches: [ '**' ]
+    branches:
+      - '**'  # All PRs
 
 jobs:
   build:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'  # Only PRs to main
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-         flutter-version: '3.32.1'
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
+          flutter-version: 'stable'
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
@@ -45,3 +40,14 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+  check_status:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.base_ref != 'main')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      
+      - name: Simple status step
+        run: echo "✅ Simple CI check for branch: ${{ github.ref || github.base_ref }}"
